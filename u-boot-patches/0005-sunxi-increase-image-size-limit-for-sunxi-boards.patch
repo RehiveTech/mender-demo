@@ -1,0 +1,26 @@
+From e65c97e6a9e4f56671fae825443387759464ee99 Mon Sep 17 00:00:00 2001
+From: Matej Postolka <xposto02@stud.fit.vutbr.cz>
+Date: Thu, 26 Mar 2020 16:43:24 +0100
+Subject: [PATCH 5/6] sunxi: increase image size limit for sunxi boards
+
+Signed-off-by: Matej Postolka <xposto02@stud.fit.vutbr.cz>
+---
+ include/configs/sunxi-common.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/configs/sunxi-common.h b/include/configs/sunxi-common.h
+index 0ef289fd64..2c47c24772 100644
+--- a/include/configs/sunxi-common.h
++++ b/include/configs/sunxi-common.h
+@@ -131,7 +131,7 @@
+  * (CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR * 512)), but the value will be used
+  * directly in a makefile, without the preprocessor expansion.
+  */
+-#define CONFIG_BOARD_SIZE_LIMIT		0x7e000
++#define CONFIG_BOARD_SIZE_LIMIT		0xa0000
+ #endif
+ 
+ #if CONFIG_MMC_SUNXI_SLOT_EXTRA != -1
+-- 
+2.20.1
+

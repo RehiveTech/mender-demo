@@ -1,0 +1,29 @@
+From b114c972c652542fc31b35135ed9a239654cc117 Mon Sep 17 00:00:00 2001
+From: Kristian Amlie <kristian.amlie@northern.tech>
+Date: Mon, 28 Aug 2017 18:12:37 +0200
+Subject: [PATCH 4/6] Disable CONFIG_BOOTCOMMAND and enable
+ CONFIG_MENDER_BOOTCOMMAND.
+
+Signed-off-by: Kristian Amlie <kristian.amlie@northern.tech>
+---
+ include/env_default.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/env_default.h b/include/env_default.h
+index 472e2fda9a..6b27d9abd0 100644
+--- a/include/env_default.h
++++ b/include/env_default.h
+@@ -34,8 +34,8 @@ const uchar default_environment[] = {
+ #ifdef	CONFIG_USE_BOOTARGS
+ 	"bootargs="	CONFIG_BOOTARGS			"\0"
+ #endif
+-#ifdef	CONFIG_BOOTCOMMAND
+-	"bootcmd="	CONFIG_BOOTCOMMAND		"\0"
++#ifdef	CONFIG_MENDER_BOOTCOMMAND
++	"bootcmd="	CONFIG_MENDER_BOOTCOMMAND	"\0"
+ #endif
+ #ifdef	CONFIG_RAMBOOTCOMMAND
+ 	"ramboot="	CONFIG_RAMBOOTCOMMAND		"\0"
+-- 
+2.20.1
+
