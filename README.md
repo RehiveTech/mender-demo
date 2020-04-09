@@ -120,7 +120,7 @@ mender snapshot dump > rootfs_dump.img
 ```
 
 Mender will dump the snapshot to `stdout`. The output should be redirected to a mounted filesystem (for example
-`sshfs`) as no compression is used at this stage and there willl not be enough space on the device to store the snapshot.
+`sshfs`) as no compression is used at this stage and there will not be enough space on the device to store the snapshot.
 
 ### Creating a Mender artifact
 Once a snapshot is obtained, it must be packed into a Mender artifact, which can then be deployed as an update package.
@@ -146,7 +146,7 @@ After the artifact has been successfully created, validate the artifact:
 ./mender-artifact validate release-v2.0-upgrade.mender
 ```
 
-If the Mender client is configured to validate artifact, it is also necessary to sign the artifact:
+If the Mender client is configured to verify artifact signatures, it is also necessary to sign the artifact:
 
 ```
 ./mender-artifact sign release-v2.0-upgrade.mender
