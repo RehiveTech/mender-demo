@@ -1,5 +1,28 @@
 # mender-demo
-This repository contains tools for building Mender-compatible system images for the NanoPi Neo Plus2 board.
+This repository contains tools which assist in building Mender-compatible system images for the FriendlyARM NanoPI Neo
+Plus2 board.
+
+## Introduction
+
+[Mender](https://mender.io "Mender") is an open-source software updater which aims to provide reliable OTA firmware
+upgrades with rollback support. In order to use Mender to perform system image upgrades, several requirements must be
+met; the device must be set up with the correct partition layout and the system must contain certain userspace tools
+required by the Mender client. Additionally, a modified version of the bootloader (U-Boot), which can be configured by
+Mender from userspace, must be used.
+
+Mender provides both a client and a server application. The Mender client runs on the board and handles the system
+upgrades. Each client can be connected to a Mender server, which can then be used to deploy upgrades to a large volume
+of clients or perform update scheduling. However, it is not necessary to connect the client to a server to perform
+upgrades, as the client provides userspace utilities which can be used to perform all tasks locally.
+
+This guide aims to outline the steps necessary for setting up a functional Mender client on any distro running on the
+Neo Plus2. It describes the modifications which must be made to the existing distro. The utilities in this repository
+can then be used to generate a bootable, Mender-compatible system image with this modified distro. The image will
+include the modified version of the bootloader with the proper partition layout.
+
+This guide does not cover the setup and use of the Mender server, nor does it cover other hardware-independent topics,
+as these are already covered in the official Mender [docs](https://docs.mender.io/2.3 "Mender docs"). It does, however,
+demonstrate the basic image upgrade process to enable you to quickly test the setup.
 
 ## Building a Mender-compatible System Image from Scratch
 This chapter describes the steps necessary for building a Mender-compatible system image from an arbitrary, functional
