@@ -24,12 +24,12 @@ This guide does not cover the setup and use of the Mender server, nor does it co
 as these are already covered in the official Mender [docs](https://docs.mender.io/2.3 "Mender docs"). It does, however,
 demonstrate the basic image upgrade process to enable you to quickly test the setup.
 
-## Building a Mender-compatible System Image from Scratch
+## Building a Mender-compatible System Image
 This chapter describes the steps necessary for building a Mender-compatible system image from an arbitrary, functional
-Linux rootfs.
+Linux distro.
 
-### Preparing the rootfs
-This section describes the process of modifying an existing, live system to be used as the base for a Mender-compatible
+### Preparing the distro
+This section describes the process of modifying an existing, live distro to be used as the base for a Mender-compatible
 image. Steps in this section assume you have a functional, live system running on the board.
 
 #### Migrating partitions
