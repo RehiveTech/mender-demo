@@ -7,7 +7,7 @@ class ImageCfg:
     BOOT_PART = 0
     ENV_PART = 0
     STORAGE_INTERFACE = 'mmc'
-    MMC_DEVICE_PREFIX = '/dev/mmcblk'
+    KERNEL_DEVICE_PREFIX = '/dev/mmcblk'
 
     DEFAULT_MMC_DEVICE = 0
     DEFAULT_ROOTFS_PART_A = 1
@@ -29,6 +29,7 @@ class ImageCfg:
 
     def __init__(self):
         self._mmc_dev = self.DEFAULT_MMC_DEVICE
+        self._kernel_dev_prefix = None
         self._rootfs_a = self.DEFAULT_ROOTFS_PART_A
         self._rootfs_b = self.DEFAULT_ROOTFS_PART_B
         self._env_size = self.DEFAULT_ENV_SIZE
@@ -49,6 +50,10 @@ class ImageCfg:
         mmc_dev = input(f'Number of MMC device with UBoot and rootfs (0=sdcard, 1=eMMC) [{self._mmc_dev}]: ')
         if mmc_dev:
             self._mmc_dev = int(mmc_dev, 0)
+
+        self._kernel_dev_prefix = f'{self.KERNEL_DEVICE_PREFIX}{self._mmc_dev}'
+        self._kernel_dev_prefix = input(
+            f'Kernel prefix of boot device [{self._kernel_dev_prefix}]: ') or self._kernel_dev_prefix
 
         rootfs_a = input(f'Rootfs A partition [{self._rootfs_a}]: ')
         if rootfs_a:
@@ -109,11 +114,11 @@ class ImageCfg:
                 f'#define MENDER_UBOOT_STORAGE_INTERFACE "{self.STORAGE_INTERFACE}"\n'
                 f'#define MENDER_UBOOT_STORAGE_DEVICE {self._mmc_dev}\n'
                 f'#define MENDER_UBOOT_CONFIG_SYS_MMC_ENV_PART {self.ENV_PART}\n\n'
-                f'#define MENDER_STORAGE_DEVICE_BASE "{self.MMC_DEVICE_PREFIX}{self._mmc_dev}p"\n'
+                f'#define MENDER_STORAGE_DEVICE_BASE "{self._kernel_dev_prefix}p"\n'
                 f'#define MENDER_UBOOT_ENV_STORAGE_DEVICE_OFFSET_1 {hex(self._env_primary_offset)}\n'
                 f'#define MENDER_UBOOT_ENV_STORAGE_DEVICE_OFFSET_2 {hex(self._env_secondary_offset)}\n'
-                f'#define MENDER_ROOTFS_PART_A_NAME "{self.MMC_DEVICE_PREFIX}{self._mmc_dev}p{self._rootfs_a}"\n'
-                f'#define MENDER_ROOTFS_PART_B_NAME "{self.MMC_DEVICE_PREFIX}{self._mmc_dev}p{self._rootfs_b}"\n\n'
+                f'#define MENDER_ROOTFS_PART_A_NAME "{self._kernel_dev_prefix}p{self._rootfs_a}"\n'
+                f'#define MENDER_ROOTFS_PART_B_NAME "{self._kernel_dev_prefix}p{self._rootfs_b}"\n\n'
                 f'#define MENDER_BOOTENV_SIZE {hex(self._env_size)}\n\n'
                 f'#define MENDER_BOOT_KERNEL_TYPE "{self._kernel_type}"\n'
                 f'#define MENDER_KERNEL_NAME "{self._kernel_path}"\n'
