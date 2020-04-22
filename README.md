@@ -156,7 +156,7 @@ https://docs.mender.io/2.3/downloads
 Create an artifact from the snapshot:
 
 ```
-./mender-artifact --copmression lzma write rootfs-image -t nanopineoplus2 -n release-v2.0 -u rootfs_dump.img -o release-v2.0-upgrade.mender 
+./mender-artifact write rootfs-image -t nanopineoplus2 -n release-v2.0 -u rootfs_dump.img -o release-v2.0-upgrade.mender
 ```
 
 see:
