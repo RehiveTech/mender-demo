@@ -47,7 +47,7 @@ class ImageCfg:
     def uboot_opts(self):
         print('\nU-Boot setup:')
 
-        mmc_dev = input(f'Number of MMC device with UBoot and rootfs (0=sdcard, 1=eMMC) [{self._mmc_dev}]: ')
+        mmc_dev = input(f'U-Boot id of MMC device with UBoot and rootfs (0=sdcard, 2=eMMC) [{self._mmc_dev}]: ')
         if mmc_dev:
             self._mmc_dev = int(mmc_dev, 0)
 
