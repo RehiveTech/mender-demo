@@ -43,8 +43,8 @@ class ImageCfg:
         self._data_img = self.DEFAULT_DATA_IMG
         self._out_img = self.DEFAULT_OUTPUT_IMG
 
-    def user_opts(self):
-        print('UBoot and MMC setup')
+    def uboot_opts(self):
+        print('\nU-Boot setup:')
 
         mmc_dev = input(f'Number of MMC device with UBoot and rootfs (0=sdcard, 1=eMMC) [{self._mmc_dev}]: ')
         if mmc_dev:
@@ -79,31 +79,21 @@ class ImageCfg:
             raise ValueError(f'Rootfs offset not divisible by block size ({self.DD_PART_BS})')
 
         self._kernel_type = input(f'Kernel type (booti, bootm, ...) [{self._kernel_type}]: ') or self._kernel_type
-        self._kernel_path = input(f'Kernel image path [{self._kernel_path}]: ') or self._kernel_path
-        self._dtb_path = input(f'Device tree path [{self._dtb_path}]: ') or self._dtb_path
+        self._kernel_path = input(f'Kernel image path (in /boot) [{self._kernel_path}]: ') or self._kernel_path
+        self._dtb_path = input(f'Device tree path (in /boot) [{self._dtb_path}]: ') or self._dtb_path
 
         boot_limit = input(f'Boot counter limit [{self._boot_limit}]: ')
         if boot_limit:
             self._boot_limit = int(boot_limit, 0)
+
+    def img_opts(self):
+        print('\nSD image parameters:')
 
         self._rootfs_img = input(
             f'Path to rootfs partition image to use in final image [{self._rootfs_img}]: ') or self._rootfs_img
         self._data_img = input(
             f'Path to data partition image to use in final image [{self._data_img}]: ') or self._data_img
         self._out_img = input(f'Path to output image file [{self._out_img}]: ') or self._out_img
-
-    def print_params(self):
-        print('\n\nUBoot and MMC params:')
-        print(f'Number of MMC device with UBoot and rootfs: {self._mmc_dev}')
-        print(f'Rootfs A partition: {self._rootfs_a}')
-        print(f'Rootfs B partition: {self._rootfs_b}')
-        print(f'UBoot environment size: {hex(self._env_size)}')
-        print(f'Primary UBoot environment offset: {hex(self._env_primary_offset)}')
-        print(f'Secondary UBoot environment offset: {hex(self._env_secondary_offset)}')
-        print(f'Rootfs offset: {hex(self._rootfs_offset)}')
-        print(f'Kernel type: {self._kernel_type}')
-        print(f'Kernel image path: {self._kernel_path}')
-        print(f'Device tree path: {self._dtb_path}')
 
     def dump_mender_defines(self, uboot_path):
         with open(f'{uboot_path}/include/config_mender_defines.h', 'w') as f:
@@ -159,6 +149,8 @@ class ImageCfg:
         a = input('Do you wish to assemble an MMC image? [N/y]: ')
         if a != 'y':
             return
+
+        self.img_opts()
 
         subprocess.run(['dd', 'if=/dev/zero', f'of={self._out_img}', f'bs={self._rootfs_offset}', 'count=1'])
 
@@ -278,6 +270,8 @@ class UBootBuilder:
         if a != 'y':
             return
 
+        self._image_cfg.uboot_opts()
+
         self._image_cfg.dump_mender_defines(self.UBOOT_PATH)
         self._image_cfg.dump_kconfig_fragment(self.UBOOT_PATH, self.KCONFIG_FRAGMENT)
 
@@ -297,8 +291,6 @@ Toolchain.extract()
 UBootBuilder.shallow_clone()
 
 img = ImageCfg()
-img.user_opts()
-img.print_params()
 
 t = Toolchain()
 t.load_env()
