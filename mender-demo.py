@@ -157,12 +157,14 @@ class ImageCfg:
 
         self.img_opts()
 
-        subprocess.run(['dd', 'if=/dev/zero', f'of={self._out_img}', f'bs={self._rootfs_offset}', 'count=1'])
+        subprocess.run(['dd', 'if=/dev/zero', f'of={self._out_img}', f'bs={self._rootfs_offset}', 'count=1'],
+                       check=True)
 
-        subprocess.run(['parted', '--script', self._out_img, 'mklabel', 'msdos'])
+        subprocess.run(['parted', '--script', self._out_img, 'mklabel', 'msdos'], check=True)
 
         subprocess.run(
-            ['dd', f'if={UBootBuilder.RESULT_BINARY}', f'of={self._out_img}', 'bs=1024', 'seek=8', 'conv=notrunc'])
+            ['dd', f'if={UBootBuilder.RESULT_BINARY}', f'of={self._out_img}', 'bs=1024', 'seek=8', 'conv=notrunc'],
+            check=True)
 
         rfs_size = os.stat(self._rootfs_img).st_size
         rfs_blocks = self.get_block_count(rfs_size, self.DD_PART_BS)
@@ -171,20 +173,21 @@ class ImageCfg:
 
         offset_blocks = self.get_block_count(self._rootfs_offset, self.DD_PART_BS)
         subprocess.run(
-            ['dd', f'if={self._rootfs_img}', f'of={self._out_img}', f'bs={self.DD_PART_BS}', f'seek={offset_blocks}'])
+            ['dd', f'if={self._rootfs_img}', f'of={self._out_img}', f'bs={self.DD_PART_BS}', f'seek={offset_blocks}'],
+            check=True)
         subprocess.run(['dd', f'if={self._rootfs_img}', f'of={self._out_img}', f'bs={self.DD_PART_BS}',
-                        f'seek={offset_blocks + rfs_blocks}'])
+                        f'seek={offset_blocks + rfs_blocks}'], check=True)
         subprocess.run(['dd', f'if={self._data_img}', f'of={self._out_img}', f'bs={self.DD_PART_BS}',
-                        f'seek={offset_blocks + 2 * rfs_blocks}'])
+                        f'seek={offset_blocks + 2 * rfs_blocks}'], check=True)
 
         subprocess.run(['parted', '--script', self._out_img, 'mkpart', 'primary', 'ext2', f'{self._rootfs_offset}B',
-                        f'{self._rootfs_offset + rfs_size - 1}B'])
+                        f'{self._rootfs_offset + rfs_size - 1}B'], check=True)
         subprocess.run(['parted', '--script', self._out_img, 'mkpart', 'primary', 'ext2',
                         f'{self._rootfs_offset + rfs_blocks * self.DD_PART_BS}B',
-                        f'{self._rootfs_offset + rfs_blocks * self.DD_PART_BS + rfs_size - 1}B'])
+                        f'{self._rootfs_offset + rfs_blocks * self.DD_PART_BS + rfs_size - 1}B'], check=True)
         subprocess.run(['parted', '--script', self._out_img, 'mkpart', 'primary', 'ext2',
                         f'{self._rootfs_offset + 2 * rfs_blocks * self.DD_PART_BS}B',
-                        f'{self._rootfs_offset + 2 * rfs_blocks * self.DD_PART_BS + data_size - 1}B'])
+                        f'{self._rootfs_offset + 2 * rfs_blocks * self.DD_PART_BS + data_size - 1}B'], check=True)
 
 
 class Toolchain:
@@ -202,10 +205,10 @@ class Toolchain:
             return
 
         print('\nClearing existing SDK')
-        subprocess.run(['rm', '-rf', Toolchain.EXTRACT_PATH])
+        subprocess.run(['rm', '-rf', Toolchain.EXTRACT_PATH], check=True)
 
         print('\nExtracting toolchain')
-        subprocess.run([Toolchain.TOOLCHAIN_EXECUTABLE, '-d', Toolchain.EXTRACT_PATH])
+        subprocess.run([Toolchain.TOOLCHAIN_EXECUTABLE, '-d', Toolchain.EXTRACT_PATH], check=True)
 
     def load_env(self):
         self._env.update(os.environ)
@@ -218,8 +221,10 @@ class Toolchain:
     @staticmethod
     def source(path):
         proc = subprocess.Popen(['bash', '-c', f'set -a && source {path} && env -0'], stdout=subprocess.PIPE,
-                                shell=False)
+                                     shell=False)
         output, err = proc.communicate()
+        if proc.returncode != 0:
+            raise RuntimeError(f'Failed to source {path}')
         output = output.decode('utf8')
         env = dict((line.split("=", 1) for line in output.split('\x00') if line))
 
@@ -256,10 +261,11 @@ class UBootBuilder:
             return
 
         print(f'\nClearing existing U-Boot repository')
-        subprocess.run(['rm', '-rf', UBootBuilder.UBOOT_PATH])
+        subprocess.run(['rm', '-rf', UBootBuilder.UBOOT_PATH], check=True)
 
         print(f'\nShallow-cloning U-Boot {UBootBuilder.TAG}')
-        subprocess.run(['git', 'clone', '-b', UBootBuilder.TAG, '--single-branch', '--depth', '1', UBootBuilder.REPO])
+        subprocess.run(['git', 'clone', '-b', UBootBuilder.TAG, '--single-branch', '--depth', '1', UBootBuilder.REPO],
+                       check=True)
 
         UBootBuilder.patch()
 
@@ -268,7 +274,7 @@ class UBootBuilder:
         print('\nPatching U-Boot')
         for p in UBootBuilder.UBOOT_PATCHES:
             with open(f'{UBootBuilder.UBOOT_PATCH_PATH}/{p}', 'r') as pf:
-                subprocess.run(['git', 'am'], cwd=UBootBuilder.UBOOT_PATH, stdin=pf)
+                subprocess.run(['git', 'am'], cwd=UBootBuilder.UBOOT_PATH, stdin=pf, check=True)
 
     def build(self):
         a = input('Do you wish to build U-Boot? [N/y]: ')
@@ -280,14 +286,14 @@ class UBootBuilder:
         self._image_cfg.dump_mender_defines(self.UBOOT_PATH)
         self._image_cfg.dump_kconfig_fragment(self.UBOOT_PATH, self.KCONFIG_FRAGMENT)
 
-        subprocess.run(['cp', self.BL31_BIN, self.UBOOT_PATH])
+        subprocess.run(['cp', self.BL31_BIN, self.UBOOT_PATH], check=True)
 
-        subprocess.run(['make', self.DEFCONFIG], cwd=self.UBOOT_PATH, env=self._toolchain.env)
+        subprocess.run(['make', self.DEFCONFIG], cwd=self.UBOOT_PATH, env=self._toolchain.env, check=True)
         subprocess.run(['scripts/kconfig/merge_config.sh', '-m', '.config', self.KCONFIG_FRAGMENT], cwd=self.UBOOT_PATH,
-                       env=self._toolchain.env)
-        subprocess.run(['make', 'olddefconfig'], cwd=self.UBOOT_PATH, env=self._toolchain.env)
+                       env=self._toolchain.env, check=True)
+        subprocess.run(['make', 'olddefconfig'], cwd=self.UBOOT_PATH, env=self._toolchain.env, check=True)
 
-        subprocess.run(['make', f'-j{self.MAKE_PARALLEL}'], cwd=self.UBOOT_PATH, env=self._toolchain.env)
+        subprocess.run(['make', f'-j{self.MAKE_PARALLEL}'], cwd=self.UBOOT_PATH, env=self._toolchain.env, check=True)
 
 
 print('This script will attempt to set up the toolchain, U-Boot, compile it and build a system image')
