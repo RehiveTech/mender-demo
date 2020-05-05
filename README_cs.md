@@ -1,6 +1,7 @@
 # mender-demo
-Tento repozitář obsahuje nástroje potřebné pro sestavení image pro desku FriendlyARM NanoPI Neo Plus2, který je
-kompatibilní se systémem Mender.
+Tento repozitář obsahuje nástroje potřebné pro sestavení Mender-kompatibilního image pro bezpečnou vzdálenou aktualizaci
+v systému PIXLA. Testováno na desce FriendlyARM NanoPI Neo Plus2. Po úpravách (např. defonfig, patche) bude fungovat i
+na jiných platformách.
 
 ## Úvod
 
@@ -88,7 +89,7 @@ device_type=nanopineoplus2
 `device_type` může být libovolný řetězec. `device_type` systému se porovnává s `device_type` uvedeným v aktualizačním
 artefaktu pro zjištění, zda je daná aktualizace určena pro aktuální systém.
 
-`systemd` službu `mender` není třeba povolovat, pokud klient není připojen na Mender server.
+`systemd` službu `mender` není třeba povolovat, protože Mender server se nepoužívá. Systém PIXLA zajišťuje přenos artefaktu.
 
 #### Soubory v `/boot`
 Adresář `/boot` musí obsahovat kernel a device tree zařízení. Na názvu těchto souborů nezáleží, ale při překladu
@@ -107,7 +108,7 @@ dd if=/dev/mmcblk0p2 bs=1M of=data.img
 
 #### Překlad U-Bootu
 Pro tento krok je třeba skript `mender-demo.py`, funkční OpenEmbedded toolchain a již přeložený ARM SPL. Jak
-toolchain, tak ARM SPL jsou k dispozici v archivu `mender-demo.tar.gz`
+toolchain, tak ARM SPL jsou k dispozici v archivu na adrese https://bit.ly/mender-demo_tar_gz.
 
 Po umístění toolchain instalátoru (`poky-glibc-x86_64-meta-toolchain-aarch64-nanopi-neo-plus2-toolchain-3.0.2.sh`) a
 ARM SPL (`bl31.bin`) do stejného adresáře se skriptem `mender-demo.py` stačí skript spustit. Skript stáhne U-Boot a

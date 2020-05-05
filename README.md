@@ -1,6 +1,7 @@
 # mender-demo
-This repository contains tools which assist in building Mender-compatible system images for the FriendlyARM NanoPI Neo
-Plus2 board.
+This repository contains tools which assist in building Mender-compatible system images needed for safe remote update in
+PIXLA. Tested on the FriendlyARM NanoPI Neo Plus2 but it should work on other platforms too after modifications (e.g.
+defconfig, patches)
 
 ## Introduction
 
@@ -89,8 +90,8 @@ device_type=nanopineoplus2
 `device_type` can be a string of your choice. It is used for determining the compatibility of a rootfs update with
 the system.
 
-The Mender systemd service does not need to be enabled unless you are using a Mender Server that the client will
-connect to.
+The Mender systemd service does not need to be enabled as Medner Server isn't used. The PIXLA takes care of transferring
+the artifact.
 
 #### Setting up `/boot`
 The `/boot` directory must contain the kernel image and the flattened device tree blob. Feel free to use any path and
@@ -108,8 +109,8 @@ dd if=/dev/mmcblk0p2 bs=1M of=data.img
 ### Building the image
 
 #### Building U-Boot
-This step requires you to have a toolchain and the ARM SPL. Feel free to use the ones in
-`antdev:/srv/git/xposto02/mender-demo.tar.gz`
+This step requires you to have a toolchain and the ARM SPL. Feel free to use the ones from
+https://bit.ly/mender-demo_tar_gz.
 
 Once the toolchain and `bl31.bin` are placed in the working directory, run `./mender-demo.py`. The script will extract
 the toolchain, download U-Boot sources and apply patches.

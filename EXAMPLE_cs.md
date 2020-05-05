@@ -1,18 +1,15 @@
-# Rehive distro + Mender
-Tento dokument obsahuje konkrétní příklad sestavení Mender-kompatibilního image z distribuce, kterou používá Rehive.
+# RehiveTech distro + Mender
+Tento dokument obsahuje konkrétní příklad sestavení Mender-kompatibilního image pro bezpečnou vzdálenou aktualizaci v systému PIXLA. Je postaven na distribuci, kterou používá RehiveTech (AuroraHub IoT Gateway v jakékoli variantě).
 
 ## Požadavky
 
 * Skript `mender-demo.py`
 * OpenEmbedded toolchain
 * ARM SPL
+* Root filesystem distribuce RehiveTech `rootfs.tar.gz`
+* Boot filesystem distribuce RehiveTech `bootfs.tar.gz`
 
-Vše je obsaženo v archivu `mender-demo.tar.gz`
-
-Zároveň jsou potřeba archivy obsahující kompletní filesystém Rehive distribuce:
-
-* `rootfs.tar.gz`
-* `bootfs.tar.gz`
+Vše je obsaženo v archivu na adrese https://bit.ly/mender-demo_tar_gz.
 
 ## Příprava systémového image
 

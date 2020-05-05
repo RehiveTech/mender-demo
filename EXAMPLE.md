@@ -1,18 +1,16 @@
-# Rehive rootfs + Mender
-This is a step-by-step example of building a Mender-compatible image from the Rehive distro.
+# RehiveTech rootfs + Mender
+This is a step-by-step example of building a Mender-compatible image for safe remote update in PIXLA from the standard
+RehiveTech distro (e.g. AuroraHub IoT Gateway in any of its variant).
 
 ## Requirements
 
 * The `mender-demo.py` script
 * A functional OpenEmbedded toolchain with headers required for building U-Boot
 * ARM SPL
+* Root filesystem of RehiveTech distro `rootfs.tar.gz`
+* Boot filesystem of RehiveTech distro `bootfs.tar.gz`
 
-All of the above can be obtained by downloading and extracting `mender-demo.tar.gz`
-
-Additionally, you will need the archives containing the rootfs and bootfs of the Rehive distro:
-
-* `rootfs.tar.gz`
-* `bootfs.tar.gz`
+All of the above can be obtained by downloading and extracting archive at https://bit.ly/mender-demo_tar_gz.
 
 ## Preparing the rootfs
 
