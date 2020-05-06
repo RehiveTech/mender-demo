@@ -7,7 +7,7 @@ This is a step-by-step example of building a Mender-compatible image from the Re
 * A functional OpenEmbedded toolchain with headers required for building U-Boot
 * ARM SPL
 
-All of the above can be obtained by downloading and extracting `antdev:/srv/git/xposto02/mender-demo.tar.gz`
+All of the above can be obtained by downloading and extracting `mender-demo.tar.gz`
 
 Additionally, you will need the archives containing the rootfs and bootfs of the Rehive distro:
 
