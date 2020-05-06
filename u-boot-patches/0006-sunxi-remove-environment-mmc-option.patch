@@ -1,18 +1,18 @@
-From e8c86cae50f7598e56bce0cb5b2b1372738de6ef Mon Sep 17 00:00:00 2001
+From b83e66633ee526647ee64e7ffeade17a958abc09 Mon Sep 17 00:00:00 2001
 From: Matej Postolka <xposto02@stud.fit.vutbr.cz>
 Date: Thu, 26 Mar 2020 16:45:37 +0100
 Subject: [PATCH 6/6] sunxi: remove environment mmc option
 
 Signed-off-by: Matej Postolka <xposto02@stud.fit.vutbr.cz>
 ---
- include/configs/sunxi-common.h | 6 ------
- 1 file changed, 6 deletions(-)
+ include/configs/sunxi-common.h | 7 -------
+ 1 file changed, 7 deletions(-)
 
 diff --git a/include/configs/sunxi-common.h b/include/configs/sunxi-common.h
-index 2c47c24772..077af2e193 100644
+index 2c47c24..3cf04a0 100644
 --- a/include/configs/sunxi-common.h
 +++ b/include/configs/sunxi-common.h
-@@ -134,13 +134,7 @@
+@@ -134,13 +134,6 @@
  #define CONFIG_BOARD_SIZE_LIMIT		0xa0000
  #endif
  
@@ -21,11 +21,11 @@ index 2c47c24772..077af2e193 100644
 -#define CONFIG_SYS_MMC_ENV_DEV		1
 -#else
 -/* Otherwise, use the only device we have */
- #define CONFIG_SYS_MMC_ENV_DEV		0
+-#define CONFIG_SYS_MMC_ENV_DEV		0
 -#endif
  #define CONFIG_SYS_MMC_MAX_DEVICE	4
  #endif
  
 -- 
-2.20.1
+1.8.3.1
 
