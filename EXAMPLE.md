@@ -9,6 +9,11 @@ This is a step-by-step example of building a Mender-compatible image from the Re
 
 All of the above can be obtained by downloading and extracting `antdev:/srv/git/xposto02/mender-demo.tar.gz`
 
+Additionally, you will need the archives containing the rootfs and bootfs of the Rehive distro:
+
+* `rootfs.tar.gz`
+* `bootfs.tar.gz`
+
 ## Preparing the rootfs
 
 ### Preparing the rootfs partition image
